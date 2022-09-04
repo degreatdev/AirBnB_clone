@@ -13,7 +13,6 @@ from models.review import Review
 from models.state import State
 
 
-"""It contains the entry poin of the command interpreter for our project"""
 class HBNBCommand(cmd.Cmd):
     """It a subclass of the cmd prompt that manage our project"""
     __class = {
