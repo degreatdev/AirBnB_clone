@@ -176,7 +176,7 @@ class HBNBCommand(cmd.Cmd):
             or updating attribute (save the change into the JSON file).
             Ex: $ update BaseModel 1234-1234-1234 email "aibnb@mail.com".
         """
-        # check if the given order of input is correct
+        """ check if the given order of input is correct"""
         if (HBNBCommand.checker(arg) != 1):
             objdict = storage.all()
             args = arg.split()
@@ -189,12 +189,12 @@ class HBNBCommand(cmd.Cmd):
                 obj = objdict[class_name]
                 name = args[2].strip('"')
                 strin = args[3]
-                #check if it is a dictionary
+                """check if it is a dictionary"""
                 if args[2][0] == '{':
                     for i in range(2, len(args)):
                         strin = args[i].strip("{")
                         strin = args[i].strip("}")
-                        #check if it a string or integer or float
+                        """check if it a string or integer or float"""
                         if strin[-1] == ':':
                             name = strin.strip(":")
                             name = name.strip('{')
@@ -211,7 +211,7 @@ class HBNBCommand(cmd.Cmd):
                             strin = strin.strip('"')
                             strin = strin.strip('{')
 
-                        # updating the value
+                        """ updating the value"""
                         if (name in obj.to_dict() and type(obj.to_dict()[name]) in {str, int, float}):
                             typ = type(obj.to_dict()[name])
                             obj.__dict__[name] = typ(strin)
@@ -219,7 +219,7 @@ class HBNBCommand(cmd.Cmd):
                             obj.__dict__[name] = strin
                     obj.save()
                 else:
-                    #check if it a string or integer or float
+                    """ check if it a string or integer or float"""
                     if strin[0] != '"':
                         try:
                             strin = int(strin)
@@ -227,7 +227,7 @@ class HBNBCommand(cmd.Cmd):
                             strin = float(strin)
                     else:
                         strin = strin.strip('"')
-                # updating the value
+                    
 
                     if (name in obj.to_dict() and type(obj.to_dict()[name]) in {str, int, float}):
                         typ = type(obj.to_dict()[name])
