@@ -24,13 +24,17 @@ class HBNBCommand(cmd.Cmd):
         "Place",
         "Review",
     }
+
     def __init__(self):
         """It helps to display the '(hbnb)' in the console"""
         cmd.Cmd.__init__(self)
         self.prompt = "(hbnb) "
+
     def default(self, line):
         """It helps to handle defualt arguments"""
-        arg = ""; comad = "";  id = None
+        arg = ""
+        comad = ""
+        id = None
         lis = line.split(".")
         """Checks if the Class is valid"""
         if lis[0] in HBNBCommand.__class and len(lis) > 1:
@@ -52,19 +56,20 @@ class HBNBCommand(cmd.Cmd):
                     lis = lis[1].split(" ")
                     lis = lis[0]
                     id = lis[1:-2]
-                    arg +=  " " + id
+                    arg += " " + id
 
             """ All the available commands in the console """
             command = {
-            "show": "self.do_show(arg)",
-             "destroy": "self.do_destroy(arg)",
-             "update": "self.do_update(arg)",
-             "all": "self.do_all(arg)",
-             "count": "self.count(arg)"
+                "show": "self.do_show(arg)",
+                "destroy": "self.do_destroy(arg)",
+                "update": "self.do_update(arg)",
+                "all": "self.do_all(arg)",
+                "count": "self.count(arg)"
             }
-            """ It checks if the input from the command line is a command in the console"""
+            """ It checks if the input from the
+             command line is a command in the console"""
             if comad in command:
-                if (comad == "all" and id != None) or (comad == 'count' and id != None):
+                if (id is not None) and (comad == 'all' or comad == 'count'):
                     return (super().default(line))
                 comad = command[comad]
                 eval(comad)
@@ -83,6 +88,7 @@ class HBNBCommand(cmd.Cmd):
             if di["__class__"] == arg:
                 count += 1
         print(count)
+
     def do_quit(self, arg):
         """Quit command to exit the program"""
         return True
@@ -116,7 +122,8 @@ class HBNBCommand(cmd.Cmd):
 
     @staticmethod
     def checker(arg):
-        """ It helps to check if the input parameters are in their right order"""
+        """ It helps to check if the input
+         parameters are in their right order"""
         flag = 0
         args = arg.split()
         if (len(args) == 0):
@@ -136,7 +143,8 @@ class HBNBCommand(cmd.Cmd):
         return (0)
 
     def do_show(self, arg):
-        """Print the string representation of an instance based on the classs name and id"""
+        """Print the string representation of an
+        instance based on the classs name and id"""
         if (HBNBCommand.checker(arg) != 1):
             args = arg.split()
             concat = args[0] + '.' + args[1]
@@ -153,7 +161,8 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        """Print all string representation of all instaces based or not on the class"""
+        """Print all string representation of all
+         instaces based or not on the class"""
         objdict = storage.all()
         list_items = []
         if len(arg) == 0:
@@ -211,7 +220,10 @@ class HBNBCommand(cmd.Cmd):
                             strin = strin.strip('{')
 
                         """ updating the value"""
-                        if (name in obj.to_dict() and type(obj.to_dict()[name]) in {str, int, float}):
+                        t = {str, int, float}
+                        na = name
+                        typ = obj.to_dict()
+                        if (na in typ and type(obj.to_dict()[na]) in t):
                             typ = type(obj.to_dict()[name])
                             obj.__dict__[name] = typ(strin)
                         else:
@@ -226,9 +238,9 @@ class HBNBCommand(cmd.Cmd):
                             strin = float(strin)
                     else:
                         strin = strin.strip('"')
-                    
-
-                    if (name in obj.to_dict() and type(obj.to_dict()[name]) in {str, int, float}):
+                    t = {str, int, float}
+                    na = name
+                    if (na in obj.to_dict() and type(obj.to_dict()[na]) in t):
                         typ = type(obj.to_dict()[name])
                         obj.__dict__[name] = typ(strin)
                     else:
