@@ -4,6 +4,8 @@ A command line interpreter for AirBnB clone
 """
 
 import cmd
+import json
+import shlex
 
 from models import storage
 from models.base_model import BaseModel
