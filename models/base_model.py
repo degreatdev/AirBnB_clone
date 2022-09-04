@@ -53,10 +53,9 @@ class BaseModel():
         models.storage.save()
 
     def to_dict(self):
-        """Returns a dictionary contains all keys/values of
-        __dict__ of the instance"""
-        dic = self.__dict__.copy()
-        dic["__class__"] = self.__class__.__name__
-        dic["updated_at"] = self.updated_at.isoformat()
-        dic["created_at"] = self.created_at.isoformat()
-        return dic
+        """creates a dictionary of BaseModel"""
+        self_dictionary = dict(self.__dict__)
+        self_dictionary['__class__'] = self.__class__.__name__
+        self_dictionary['created_at'] = datetime.isoformat(self.created_at)
+        self_dictionary['updated_at'] = datetime.isoformat(self.updated_at)
+        return self_dictionary
