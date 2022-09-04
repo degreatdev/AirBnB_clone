@@ -102,6 +102,151 @@ class HBNBCommand(cmd.Cmd):
         """print a new line when ENTER is press"""
         pass
 
+    def do_create(self, arg):
+        """
+            Create a new instance of BaseModel, saves it(to the JSON file) and
+            prints the id. Ex $create BaseModel
+        """
+        args = arg.split()
+        if (len(arg) == 0):
+            print("** class name missing **")
+        elif (args[0] not in HBNBCommand.__class):
+            print("** class doesn't exist **")
+        else:
+            class_name = eval(args[0])
+            class_name = class_name()
+            print(class_name.id)
+            class_name.save()
+            # print(eval(args[0])().id)
+            # storage.save()
+
+    @staticmethod
+    def checker(arg):
+        """ It helps to check if the input
+         parameters are in their right order"""
+        flag = 0
+        args = arg.split()
+        if (len(args) == 0):
+            print("** class name missing **")
+            return (1)
+        elif (len(args) > 0 and args[0] not in HBNBCommand.__class):
+            print("** class doesn't exist **")
+            return (1)
+        elif (len(args) < 2):
+            print("** instance id missing **")
+            return (1)
+        elif (len(args) > 1):
+            concat = args[0] + '.' + args[1].strip('"')
+            if (concat not in storage.all()):
+                print("** no instance found **")
+                return (1)
+        return (0)
+
+    def do_show(self, arg):
+        """Print the string representation of an
+        instance based on the classs name and id"""
+        if (HBNBCommand.checker(arg) != 1):
+            args = arg.split()
+            concat = args[0] + '.' + args[1]
+            objdic = storage.all()
+            print(objdic[concat])
+
+    def do_destroy(self, arg):
+        """Deletes an instance based on the class name and id"""
+        if (HBNBCommand.checker(arg) != 1):
+            args = arg.split()
+            concat = args[0] + '.' + args[1]
+            objdic = storage.all()
+            del objdic[concat]
+            storage.save()
+
+    def do_all(self, arg):
+        """Print all string representation of all
+         instaces based or not on the class"""
+        objdict = storage.all()
+        list_items = []
+        if len(arg) == 0:
+            for key in objdict.keys():
+                list_items.append(str(objdict[key]))
+            print(list_items)
+        elif (arg not in HBNBCommand.__class):
+            print("** class doesn't exist")
+        else:
+            for value in objdict.values():
+                dic = value.to_dict()
+                if arg == dic["__class__"]:
+                    list_items.append(str(value))
+            print(list_items)
+
+    def do_update(self, arg):
+        """
+            Updates an instance based on the class name and id by adding
+            or updating attribute (save the change into the JSON file).
+            Ex: $ update BaseModel 1234-1234-1234 email "aibnb@mail.com".
+        """
+        """ check if the given order of input is correct"""
+        if (HBNBCommand.checker(arg) != 1):
+            objdict = storage.all()
+            args = arg.split()
+            class_name = args[0].strip('"') + '.' + args[1].strip('"')
+            if (len(args) < 3):
+                print("** attribute name missing **")
+            elif (len(args) < 4 or len(args) % 2 != 0):
+                print("** value missing **")
+            else:
+                obj = objdict[class_name]
+                name = args[2].strip('"')
+                strin = args[3]
+                """check if it is a dictionary"""
+                if args[2][0] == '{':
+                    for i in range(2, len(args)):
+                        strin = args[i].strip("{")
+                        strin = args[i].strip("}")
+                        """check if it a string or integer or float"""
+                        if strin[-1] == ':':
+                            name = strin.strip(":")
+                            name = name.strip('{')
+                            name = name.strip('}')
+                            name = name.strip('"')
+                            continue
+                        cond = {'{', '"', '(', '['}
+                        if strin[0] not in cond:
+                            try:
+                                strin = int(strin)
+                            except ValueError:
+                                strin = float(strin)
+                        else:
+                            strin = strin.strip('"')
+                            strin = strin.strip('{')
+
+                        """ updating the value"""
+                        t = {str, int, float}
+                        na = name
+                        typ = obj.to_dict()
+                        if (na in typ and type(obj.to_dict()[na]) in t):
+                            typ = type(obj.to_dict()[name])
+                            obj.__dict__[name] = typ(strin)
+                        else:
+                            obj.__dict__[name] = strin
+                    obj.save()
+                else:
+                    """ check if it a string or integer or float"""
+                    if strin[0] != '"':
+                        try:
+                            strin = int(strin)
+                        except ValueError:
+                            strin = float(strin)
+                    else:
+                        strin = strin.strip('"')
+                    t = {str, int, float}
+                    na = name
+                    if (na in obj.to_dict() and type(obj.to_dict()[na]) in t):
+                        typ = type(obj.to_dict()[name])
+                        obj.__dict__[name] = typ(strin)
+                    else:
+                        obj.__dict__[name] = strin
+                obj.save()
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
