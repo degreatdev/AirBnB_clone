@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 import cmd
 import sys
 from models.base_model import BaseModel
@@ -47,13 +48,13 @@ class HBNBCommand(cmd.Cmd):
                     lis = lis.split(", ")
                     for st in lis:
                         arg += " " + st
-        
+
                 else:
                     lis = lis[1].split(" ")
                     lis = lis[0]
                     id = lis[1:-2]
                     arg +=  " " + id
-                
+
             """ All the available commands in the console """
             command = {
             "show": "self.do_show(arg)",
@@ -72,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 return (super().default(line))
         else:
             return (super().default(line))
-    
+
     def count(self, arg):
         """It Count the number of Specified class in the storage"""
         count = 0
@@ -170,8 +171,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """
-            Updates an instance based on the class name and id by adding 
-            or updating attribute (save the change into the JSON file). 
+            Updates an instance based on the class name and id by adding
+            or updating attribute (save the change into the JSON file).
             Ex: $ update BaseModel 1234-1234-1234 email "aibnb@mail.com".
         """
         # check if the given order of input is correct
@@ -208,7 +209,7 @@ class HBNBCommand(cmd.Cmd):
                         else:
                             strin = strin.strip('"')
                             strin = strin.strip('{')
-                        
+
                         # updating the value
                         if (name in obj.to_dict() and type(obj.to_dict()[name]) in {str, int, float}):
                             typ = type(obj.to_dict()[name])
