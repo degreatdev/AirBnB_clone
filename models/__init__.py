@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-"""IT loads the storage each time the class is called"""
+"""__init__ magic method for models directory"""
 from models.engine.file_storage import FileStorage
+
 
 storage = FileStorage()
 storage.reload()
